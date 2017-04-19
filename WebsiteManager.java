@@ -1,11 +1,11 @@
 import java.sql.*;
 
-public class SecuritySystem 
+public class WebsiteManager
 {
     private Connection connection;
     private Statement statement;
 
-    public SecuritySystem(){
+    public WebsiteManager(){
         connection = null;
         statement = null;
     }
@@ -14,23 +14,14 @@ public class SecuritySystem
     {
         String username = "ajj004";
         String password = "ahho2eiG";
-        SecuritySystem system = new SecuritySystem();
-        system.connect(username, password);
-	if(!system.checkDB(args[0], args[1])){
-            System.out.println("Either username or password is incorrect, please verify credentials");
-            System.exit(1);
-        }
-        else{
-            System.out.println("<br><br>Welcome args[0]<br><br>");
-        }
-        system.disconnect();
+        WebsiteManager manager = new WebsiteManager();
+        manager.connect(username, password);
+        manager.displayTable();
     }
 
-
-    public void connect(String username, String mysqlpassword) throws SQLException{
+    public void connect(String username, String mysqlpassword) throws SQLExcept$
         try{
-            connection = DriverManager.getConnection("jdbc:mysql://localhost/" + username + "?" + "user=" + username + "&password=" + mysqlpassword);
-
+            connection = DriverManager.getConnection("jdbc:mysql://localhost/" $
             statement = connection.createStatement();
         }
         catch(Exception e){
@@ -38,12 +29,11 @@ public class SecuritySystem
         }
     }
 
-
     public void disconnect() throws SQLException{
         connection.close();
         statement.close();
     }
-   
+
     public void query(String q){
         try{
             ResultSet resultSet = statement.executeQuery(q);
@@ -61,7 +51,7 @@ public class SecuritySystem
         printRecords(resultSet, numColumns);
     }
 
-    public void printHeader(ResultSetMetaData metaData, int numColumns) throws SQLException{
+    public void printHeader(ResultSetMetaData metaData, int numColumns) throws $
         for(int i = 1; i <= numColumns; i++){
             if(i > 1)
                 System.out.print(", ");
@@ -70,7 +60,7 @@ public class SecuritySystem
         System.out.println();
     }
     
-    public void printRecords(ResultSet resultSet, int numColumns) throws SQLException{
+    public void printRecords(ResultSet resultSet, int numColumns) throws SQLExc$
         String columnValue;
         while(resultSet.next()){
             for(int i = 1; i <= numColumns; i++){
@@ -82,25 +72,5 @@ public class SecuritySystem
             System.out.println();
         }
     }
-
-    public boolean checkDB(String userName, String password){
-        String query = "SELECT * FROM User";
-        String pass = password.substring(0,15);
-        System.out.println("<br><br>" + pass + "<br><br>");
-        try{
-            ResultSet resultSet = statement.executeQuery(query);
-            while(resultSet.next()){
-                System.out.println(resultSet.getString(1) + " " + resultSet.getString(2) + "<br>");
-                if(userName.equals(resultSet.getString(1))&&pass.equals(resultSet.getString(2)))
-                    return true;
-            }
-        }
-        catch(SQLException e){
-            System.out.println("Failure");
-            e.printStackTrace();
-        }
-        return false;
-    }
-
 
 }

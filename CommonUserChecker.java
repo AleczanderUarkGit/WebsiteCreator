@@ -16,8 +16,10 @@ public class CommonUserChecker
         String password = "ahho2eiG";
         CommonUserChecker userValidator = new CommonUserChecker();
         userValidator.connect(username, password);
-        if(!userValidator.checkDB(args[0]))
+        if(!userValidator.checkDB(args[0])){
             System.out.println("Username is taken, please select another");
+            System.exit(1);
+        }
         else{
             System.out.println("Welcome " + args[0]);
             userValidator.insertUser(args[0], args[1]);
@@ -39,46 +41,7 @@ public class CommonUserChecker
         connection.close();
         statement.close();
     }
-   
-    public void query(String q){
-        try{
-            ResultSet resultSet = statement.executeQuery(q);
-            print(resultSet);
-        }
-        catch(SQLException e){
-            e.printStackTrace();
-        }
-    }
-
-    public void print(ResultSet resultSet) throws SQLException{
-        ResultSetMetaData metaData = resultSet.getMetaData();
-        int numColumns = metaData.getColumnCount();
-        printHeader(metaData, numColumns);
-        printRecords(resultSet, numColumns);
-    }
-
-    public void printHeader(ResultSetMetaData metaData, int numColumns) throws SQLException{
-        for(int i = 1; i <= numColumns; i++){
-            if(i > 1)
-                System.out.print(", ");
-            System.out.print(metaData.getColumnName(i));
-        }
-        System.out.println();
-    }
     
-    public void printRecords(ResultSet resultSet, int numColumns) throws SQLException{
-        String columnValue;
-        while(resultSet.next()){
-            for(int i = 1; i <= numColumns; i++){
-                if(i > 1)
-                    System.out.print(",  ");
-                columnValue = resultSet.getString(i);
-                System.out.print(columnValue);
-            }
-            System.out.println();
-        }
-    }
-
     public void insert(String table, String values) {
         String query = "INSERT into " + table + " values (" + values + ")" ;
         System.out.println(query);
